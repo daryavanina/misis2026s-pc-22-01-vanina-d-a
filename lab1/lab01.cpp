@@ -176,7 +176,6 @@ double measureRDTSC() {
     unsigned __int64 t1 = __rdtsc();
     sink = a[0];
     delete[] a;
-    // частота: считаем такты за Sleep(100 мс)
     unsigned __int64 s0 = __rdtsc(); Sleep(100); unsigned __int64 s1 = __rdtsc();
     double freq_ms = (double)(s1 - s0) / 100.0; // тактов в мс
     return (double)(t1 - t0) / freq_ms;

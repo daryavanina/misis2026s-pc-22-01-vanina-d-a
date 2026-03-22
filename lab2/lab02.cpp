@@ -142,7 +142,7 @@ double gflops(int n, double ms) {
     return 2.0 * (double)n * (double)n * (double)n / (ms * 1e-3) / 1e9;
 }
 
-// ---- JSON-writer (без сторонних библиотек) ----
+// ---- JSON ----
 
 struct JsonWriter {
     std::ofstream f;
@@ -171,7 +171,6 @@ struct JsonWriter {
         beginKey(key); f << "\"" << v << "\"";
     }
 
-    // записывает массив double
     void writeArr(const char* key, const std::vector<double>& a) {
         beginKey(key);
         f << "[";
@@ -182,7 +181,6 @@ struct JsonWriter {
         f << "]";
     }
 
-    // записывает массив int
     void writeArrInt(const char* key, const std::vector<int>& a) {
         beginKey(key);
         f << "[";
@@ -231,7 +229,6 @@ int main() {
     std::cout << "  done\n\n";
 
     JsonWriter jw("lab2/lab2_results.json");
-    //JsonWriter jw("C:/Users/darya/Desktop/misis/8sem/pc/misis2026s-pc-22-01-vanina-d-a/lab2/lab2_results.json");
     jw.writeInt("fixed_N", FIXED_N);
     jw.writeInt("fixed_S", FIXED_S);
     jw.writeInt("fixed_M", FIXED_M);
@@ -295,9 +292,7 @@ int main() {
         freeMat(C1); freeMat(C2); freeMat(C3); freeMat(C4);
     }
 
-    // ================================================================
     // Буферизация: перебор M
-    // ================================================================
     std::cout << "=== Буферизация: перебор M (N=" << FIXED_N << ") ===\n";
     {
         int n = FIXED_N;
@@ -321,9 +316,7 @@ int main() {
         freeMat(A); freeMat(B); freeMat(C);
     }
 
-    // ================================================================
     // Блочное: перебор S
-    // ================================================================
     std::cout << "=== Блочное: перебор S (N=" << FIXED_N << ", M=" << FIXED_M << ") ===\n";
     {
         int n = FIXED_N, m = FIXED_M;
@@ -347,9 +340,7 @@ int main() {
         freeMat(A); freeMat(B); freeMat(C);
     }
 
-    // ================================================================
     // Блочное: перебор M (при FIXED_S)
-    // ================================================================
     std::cout << "=== Блочное: перебор M (N=" << FIXED_N << ", S=" << FIXED_S << ") ===\n";
     {
         int n = FIXED_N, s = FIXED_S;
@@ -373,9 +364,7 @@ int main() {
         freeMat(A); freeMat(B); freeMat(C);
     }
 
-    // ================================================================
     // Sweep по N: все 4 алгоритма с оптимальными параметрами
-    // ================================================================
     std::cout << "=== Sweep по N (S=" << N_SWEEP_S << ", M=" << N_SWEEP_M << ") ===\n";
     {
         std::vector<int>    nvals(std::begin(N_VALUES), std::end(N_VALUES));

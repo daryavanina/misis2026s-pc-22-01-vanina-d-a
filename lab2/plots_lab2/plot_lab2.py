@@ -1,15 +1,3 @@
-"""
-plot_lab2.py — графики для лабораторной работы №2
-=========================================================
-Запуск:   python plot_lab2.py
-Вход:     lab2_proc1.json  (и опционально lab2_proc2.json, lab2_proc3.json)
-Выход:    папка plots_lab2/
-
-Когда получишь данные с других процессоров — просто добавь файл
-lab2_proc2.json / lab2_proc3.json в ту же папку и запусти снова.
-Структура файла описана в конце скрипта.
-"""
-
 import json, os, glob
 import matplotlib
 matplotlib.use('Agg')
@@ -21,7 +9,7 @@ DPI     = 150
 N_FIXED = 512
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# ── загрузка данных ───────────────────────────────────────────────────────────
+# загрузка данных
 proc_files = sorted(glob.glob('lab2_proc*.json'))
 if not proc_files:
     raise FileNotFoundError("Не найден ни один файл lab2_proc*.json")
@@ -35,7 +23,6 @@ print(f"Загружено процессоров: {len(procs)}")
 for p in procs:
     print(f"  {p['proc_name']}")
 
-# ── палитра ───────────────────────────────────────────────────────────────────
 COLORS  = ['#4472C4', '#ED7D31', '#70AD47', '#C00000', '#7030A0']
 MARKERS = ['o', 's', '^', 'D', 'v']
 ALGO_COLORS = {
@@ -64,7 +51,7 @@ def save(fig, name):
 def best_idx(values):
     return values.index(max(values))
 
-# ── Рис. 1 — Debug vs Release ─────────────────────────────────────────────────
+# Рис. 1 — Debug vs Release
 fig, ax = plt.subplots(figsize=(max(6, len(procs) * 2.5), 4.5))
 names    = [p['proc_name'] for p in procs]
 dbg_vals = [p['debug_classic_ms'] for p in procs]
@@ -94,7 +81,7 @@ ax.legend(fontsize=10)
 ax.grid(axis='y', linestyle='--', alpha=0.4)
 save(fig, 'fig1_debug_vs_release.png')
 
-# ── Рис. 2 — Preal всех алгоритмов ───────────────────────────────────────────
+# Рис. 2 — Preal всех алгоритмов 
 algo_keys   = ['classic_ms','transpose_ms','transpose_noT_ms','buffered_ms','block_ms']
 algo_labels = ['Классическое','Транспонир.\n(с T)','Транспонир.\n(без T)',
                'Буферизация\nстолбца','Блочное']
@@ -122,7 +109,7 @@ ax.legend(fontsize=8, loc='upper left')
 ax.grid(axis='y', linestyle='--', alpha=0.4)
 save(fig, 'fig2_algos_preal.png')
 
-# ── Рис. 3 — Буферизация: Preal(M) ───────────────────────────────────────────
+# Рис. 3 — Буферизация: Preal(M)
 fig, ax = plt.subplots(figsize=(7, 4.5))
 for i, p in enumerate(procs):
     M_vals = p['release']['buffered_M_values']
@@ -146,7 +133,7 @@ ax.set_title(f'Рис. 3 — Буферизация столбца: Preal(M), N=
 ax.legend(fontsize=9); ax.grid(linestyle='--', alpha=0.4)
 save(fig, 'fig3_buffered_M.png')
 
-# ── Рис. 4 — Блочное: Preal(S) ───────────────────────────────────────────────
+# Рис. 4 — Блочное: Preal(S)
 fig, ax = plt.subplots(figsize=(7, 4.5))
 for i, p in enumerate(procs):
     S_vals = p['release']['block_S_values']
@@ -170,7 +157,7 @@ ax.set_title(f'Рис. 4 — Блочное умножение: Preal(S), N={N_F
 ax.legend(fontsize=9); ax.grid(linestyle='--', alpha=0.4)
 save(fig, 'fig4_block_S.png')
 
-# ── Рис. 5 — Блочное: Preal(M) ───────────────────────────────────────────────
+# Рис. 5 — Блочное: Preal(M)
 fig, ax = plt.subplots(figsize=(7, 4.5))
 for i, p in enumerate(procs):
     M_vals = p['release']['block_M_values']
@@ -194,7 +181,7 @@ ax.set_title(f'Рис. 5 — Блочное умножение: Preal(M), N={N_F
 ax.legend(fontsize=9); ax.grid(linestyle='--', alpha=0.4)
 save(fig, 'fig5_block_M.png')
 
-# ── Рис. 6+ — Preal(N) для каждого процессора ────────────────────────────────
+# Рис. 6+ — Preal(N) для каждого процессора 
 for fig_num, p in enumerate(procs, start=6):
     rel  = p['release']
     Nv   = rel['sweep_N_values']
